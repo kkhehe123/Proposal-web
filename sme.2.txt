@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SME Engagement Playbook 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals & Subtle Teal -->
+    <!-- Application Structure Plan: The application is designed as a "Strategic Partnership Playbook", a task-oriented dashboard. This structure was chosen over a linear report summary to directly address the user's need to "sort out" promotional campaign ideas. The core of the app is an interactive, filterable grid of campaign "plays", allowing users to quickly find relevant strategies based on goals (like Internationalization) or partner types (like Chambers of Commerce). This user-centric design transforms the report's strategic analysis into an actionable planning tool, prioritizing usability and quick access to specific, relevant information. -->
+    <!-- Visualization & Content Choices: 
+        - Key SME Needs (Pillars): Goal: Inform. Method: Icon-driven summary cards. Interaction: Static. Justification: Provides a quick, scannable overview of the core market drivers at the top of the page.
+        - Economic Forecast: Goal: Change. Method: Line Chart. Interaction: Static. Justification: A visual chart is more impactful for communicating the 2.9% growth projection than text alone. Library: Chart.js.
+        - Partnership Campaign Ideas: Goal: Organize/Explore. Method: Filterable card grid. Interaction: Users click buttons to filter cards by "Strategic Goal" and "Partner Type". Justification: This is the core interactive element, directly fulfilling the user's request to sort and explore campaign options in a dynamic, non-linear way. Method: Vanilla JS.
+        - 2026 Roadmap: Goal: Change/Sequence. Method: Visual 4-quarter timeline layout. Interaction: Static. Justification: Presents the year-long strategy in a clear, sequential format that's more engaging than a simple table. Method: HTML/Tailwind.
+        - KPI Shift: Goal: Compare. Method: Side-by-side visual comparison. Interaction: Static. Justification: Clearly illustrates the strategic shift from old to new performance metrics. Method: HTML/Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 250px;
+            max-height: 300px;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #00796B;
+            border-bottom-color: #00796B;
+        }
+        .filter-btn {
+            transition: all 0.3s;
+        }
+        .filter-btn.active {
+            background-color: #00796B;
+            color: #FFFFFF;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .campaign-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            will-change: transform;
+        }
+        .campaign-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-[#004D40]">SME Engagement Playbook 2026</h1>
+            <div class="hidden md:flex space-x-6">
+                <a href="#overview" class="nav-link text-gray-600 font-medium py-1">Overview</a>
+                <a href="#playbook" class="nav-link text-gray-600 font-medium py-1">Partnership Playbook</a>
+                <a href="#roadmap" class="nav-link text-gray-600 font-medium py-1">2026 Roadmap</a>
+                <a href="#kpis" class="nav-link text-gray-600 font-medium py-1">Measuring Success</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+        
+        <section id="overview" class="text-center mb-16 fade-in">
+            <h2 class="text-3xl md:text-4xl font-bold text-[#004D40] mb-4">A New Paradigm for SME Engagement</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-10">
+                Moving beyond ineffective seminars, this playbook outlines a new, ecosystem-centric strategy. We will reposition the bank as a strategic partner by focusing on the three core needs of modern SMEs and leveraging strategic partnerships to deliver high-value, interactive campaigns.
+            </p>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#00796B]">
+                    <div class="text-4xl mb-3">🚀</div>
+                    <h3 class="text-xl font-semibold mb-2 text-[#004D40]">Internationalization</h3>
+                    <p class="text-gray-600">SMEs have a strong desire to expand into Mainland China and SEA, but lack knowledge of local regulations and partners.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#00796B]">
+                    <div class="text-4xl mb-3">💻</div>
+                    <h3 class="text-xl font-semibold mb-2 text-[#004D40]">Digital Transformation</h3>
+                    <p class="text-gray-600">Adopting practical AI and digital tools is an immediate priority for boosting productivity and enabling growth.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-[#00796B]">
+                    <div class="text-4xl mb-3">🌿</div>
+                    <h3 class="text-xl font-semibold mb-2 text-[#004D40]">ESG & Sustainability</h3>
+                    <p class="text-gray-600">Commercial and regulatory pressures require SMEs to demonstrate ESG readiness, creating a significant knowledge gap.</p>
+                </div>
+            </div>
+             <div class="mt-12 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-semibold mb-4 text-[#004D40]">Economic Outlook: Foundation for Growth</h3>
+                <p class="text-gray-600 mb-4 max-w-2xl mx-auto">Forecasts project a stable Hong Kong economy with an average annual growth rate of 2.9% from 2026-2029, providing a strong foundation for strategic SME investment.</p>
+                <div class="chart-container">
+                    <canvas id="growthChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="playbook" class="mb-16 fade-in" style="animation-delay: 0.2s;">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#004D40] mb-4">Interactive Partnership Playbook</h2>
+                <p class="max-w-3xl mx-auto text-lg text-gray-600">
+                    Filter our portfolio of high-impact, non-seminar campaign ideas. Select a strategic goal and a partner type to discover targeted initiatives designed to build relationships and drive growth.
+                </p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-8 mb-8">
+                <div>
+                    <span class="font-semibold text-gray-700 mr-3">Strategic Goal:</span>
+                    <div id="goal-filters" class="inline-flex rounded-md shadow-sm" role="group">
+                        <button type="button" data-filter="all" class="filter-btn active px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100">All</button>
+                        <button type="button" data-filter="internationalization" class="filter-btn px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100">Internationalization</button>
+                        <button type="button" data-filter="digitalization" class="filter-btn px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100">Digitalization</button>
+                        <button type="button" data-filter="esg" class="filter-btn px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100">ESG</button>
+                    </div>
+                </div>
+                <div>
+                    <span class="font-semibold text-gray-700 mr-3">Partner Type:</span>
+                     <div id="partner-filters" class="inline-flex rounded-md shadow-sm" role="group">
+                        <button type="button" data-filter="all" class="filter-btn active px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100">All</button>
+                        <button type="button" data-filter="sme-focused" class="filter-btn px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100">SME-Focused</button>
+                        <button type="button" data-filter="tech-hubs" class="filter-btn px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100">Tech Hubs</button>
+                        <button type="button" data-filter="trade-associations" class="filter-btn px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100">Trade & Commerce</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="campaign-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        </section>
+
+        <section id="roadmap" class="mb-16 fade-in" style="animation-delay: 0.4s;">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#004D40] mb-4">The 2026 Engagement Roadmap</h2>
+                <p class="max-w-3xl mx-auto text-lg text-gray-600">
+                    A quarter-by-quarter plan to build momentum, address key SME needs, and establish the bank as a central player in the Hong Kong business ecosystem.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#00796B]">
+                    <p class="text-sm font-bold text-[#00796B]">Q1 2026</p>
+                    <h3 class="text-xl font-semibold my-2">The Digital Kickoff</h3>
+                    <p class="text-gray-600">Launch with an "AI for Productivity" hands-on workshop to provide immediate, tangible value to all SMEs.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#00796B]">
+                    <p class="text-sm font-bold text-[#00796B]">Q2 2026</p>
+                    <h3 class="text-xl font-semibold my-2">Internationalization Sprint</h3>
+                    <p class="text-gray-600">Host a "GBA & Asia: Partners & Pitch Day" roundtable, focusing on trade and manufacturing sectors.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#00796B]">
+                    <p class="text-sm font-bold text-[#00796B]">Q3 2026</p>
+                    <h3 class="text-xl font-semibold my-2">The Sustainability Imperative</h3>
+                    <p class="text-gray-600">Deliver an "ESG Reporting Masterclass" workshop for supply chain and professional services firms.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-[#00796B]">
+                    <p class="text-sm font-bold text-[#00796B]">Q4 2026</p>
+                    <h3 class="text-xl font-semibold my-2">Ecosystem Showcase</h3>
+                    <p class="text-gray-600">Culminate the year with "The HK Innovator's Pitch Competition" to support and capture high-growth tech SMEs.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="kpis" class="fade-in" style="animation-delay: 0.6s;">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#004D40] mb-4">Measuring What Matters</h2>
+                <p class="max-w-3xl mx-auto text-lg text-gray-600">
+                    To prove the long-term ROI of this relationship-focused strategy, we must shift from outdated metrics to KPIs that reflect true business value and client loyalty.
+                </p>
+            </div>
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+                <div class="bg-red-50 border-2 border-dashed border-red-200 p-6 rounded-lg">
+                    <h3 class="text-2xl font-bold text-red-700 mb-4 text-center">❌ The Old Way</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start"><span class="text-red-500 font-bold mr-3">»</span><span class="text-gray-700">Event Attendance</span></li>
+                        <li class="flex items-start"><span class="text-red-500 font-bold mr-3">»</span><span class="text-gray-700">Raw New Accounts Opened</span></li>
+                        <li class="flex items-start"><span class="text-red-500 font-bold mr-3">»</span><span class="text-gray-700">Website Clicks (Last-Click)</span></li>
+                    </ul>
+                </div>
+                <div class="bg-green-50 border-2 border-dashed border-green-200 p-6 rounded-lg">
+                    <h3 class="text-2xl font-bold text-green-800 mb-4 text-center">✅ The New Way</h3>
+                     <ul class="space-y-3">
+                        <li class="flex items-start"><span class="text-green-600 font-bold mr-3">✔</span><span class="text-gray-700"><strong>Customer Lifetime Value (CLV):</strong> Tracks long-term revenue per customer.</span></li>
+                        <li class="flex items-start"><span class="text-green-600 font-bold mr-3">✔</span><span class="text-gray-700"><strong>Product Adoption (Cross-Sell):</strong> Measures relationship depth.</span></li>
+                        <li class="flex items-start"><span class="text-green-600 font-bold mr-3">✔</span><span class="text-gray-700"><strong>Churn & Retention Rates:</strong> The ultimate measure of relationship quality.</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-4 text-center">
+            <p>&copy; 2025 Bank Strategic Planning. For internal use only.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const campaignData = [
+                {
+                    title: 'GBA & SEA Expansion Playbook',
+                    type: 'Interactive Roundtable',
+                    goal: 'internationalization',
+                    partner: 'trade-associations',
+                    partnerName: 'Trade Associations & Chambers of Commerce (商會)',
+                    description: 'A roundtable with experts and speed networking to match SMEs based on industry and expansion goals for GBA and Southeast Asian markets.',
+                    audience: 'Trade and manufacturing SMEs'
+                },
+                {
+                    title: 'ESG Reporting Masterclass',
+                    type: 'Hands-on Workshop',
+                    goal: 'esg',
+                    partner: 'sme-focused',
+                    partnerName: 'HKQAA / HKPC',
+                    description: 'A half-day, practical workshop with sector-specific breakout sessions on how to meet ESG requirements and leverage green financing.',
+                    audience: 'Supply chain & professional services'
+                },
+                {
+                    title: 'The AI-Powered SME',
+                    type: 'Hands-on Workshop',
+                    goal: 'digitalization',
+                    partner: 'sme-focused',
+                    partnerName: 'HKPC / SME Link',
+                    description: 'A practical session focused on "AI-Readiness" and implementing cost-effective automation for tasks like invoice processing.',
+                    audience: 'All SMEs'
+                },
+                {
+                    title: 'The HK Innovator\'s Pitch Competition',
+                    type: 'Awards Event & Competition',
+                    goal: 'digitalization',
+                    partner: 'tech-hubs',
+                    partnerName: 'HKSTP / Cyberport',
+                    description: 'Sponsor and co-organize a major pitch competition to position the bank as an innovator and generate leads from high-growth tech companies.',
+                    audience: 'High-growth startups & tech SMEs'
+                },
+                 {
+                    title: 'Leveraging Government Funding',
+                    type: 'Interactive Workshop',
+                    goal: 'digitalization',
+                    partner: 'sme-focused',
+                    partnerName: 'HKPC / SME Link',
+                    description: 'Co-host a workshop to demystify and provide hands-on guidance on applying for government funding schemes for digital transformation.',
+                    audience: 'All SMEs'
+                },
+                {
+                    title: 'Sector-Specific Digitalization Roundtables',
+                    type: 'Networking & Roundtable',
+                    goal: 'digitalization',
+                    partner: 'trade-associations',
+                    partnerName: 'Industry & Trade Associations',
+                    description: 'Co-host targeted roundtables on specific industry challenges, such as digitalizing construction or logistics, to provide tailored solutions.',
+                    audience: 'Specific industry sectors'
+                }
+            ];
+
+            const campaignGrid = document.getElementById('campaign-grid');
+            const goalFilters = document.getElementById('goal-filters');
+            const partnerFilters = document.getElementById('partner-filters');
+            let currentGoalFilter = 'all';
+            let currentPartnerFilter = 'all';
+
+            function renderCampaigns() {
+                campaignGrid.innerHTML = '';
+                const filteredCampaigns = campaignData.filter(campaign => {
+                    const goalMatch = currentGoalFilter === 'all' || campaign.goal === currentGoalFilter;
+                    const partnerMatch = currentPartnerFilter === 'all' || campaign.partner === currentPartnerFilter;
+                    return goalMatch && partnerMatch;
+                });
+
+                if (filteredCampaigns.length === 0) {
+                    campaignGrid.innerHTML = `<div class="col-span-1 md:col-span-2 lg:col-span-3 text-center text-gray-500 py-10">
+                        <p class="text-xl">No matching campaigns found.</p>
+                        <p>Try adjusting your filters.</p>
+                    </div>`;
+                    return;
+                }
+
+                filteredCampaigns.forEach(campaign => {
+                    const card = document.createElement('div');
+                    card.className = 'campaign-card bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 fade-in';
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start">
+                             <span class="inline-block bg-teal-100 text-teal-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${campaign.type}</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-[#004D40] mt-3 mb-2">${campaign.title}</h3>
+                        <p class="text-sm font-medium text-gray-500 mb-3">Partner with: <span class="font-bold text-gray-700">${campaign.partnerName}</span></p>
+                        <p class="text-gray-600 mb-4">${campaign.description}</p>
+                        <p class="text-sm font-semibold text-gray-800">Target Audience: <span class="font-normal text-gray-600">${campaign.audience}</span></p>
+                    `;
+                    campaignGrid.appendChild(card);
+                });
+            }
+
+            function handleFilterClick(filterGroup, event) {
+                if (event.target.tagName === 'BUTTON') {
+                    const filterValue = event.target.dataset.filter;
+                    
+                    filterGroup.querySelector('.active').classList.remove('active');
+                    event.target.classList.add('active');
+
+                    if (filterGroup.id === 'goal-filters') {
+                        currentGoalFilter = filterValue;
+                    } else if (filterGroup.id === 'partner-filters') {
+                        currentPartnerFilter = filterValue;
+                    }
+                    
+                    renderCampaigns();
+                }
+            }
+            
+            goalFilters.addEventListener('click', (e) => handleFilterClick(goalFilters, e));
+            partnerFilters.addEventListener('click', (e) => handleFilterClick(partnerFilters, e));
+            
+            renderCampaigns();
+
+            const growthCtx = document.getElementById('growthChart').getContext('2d');
+            const growthChart = new Chart(growthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2025', '2026', '2027', '2028', '2029'],
+                    datasets: [{
+                        label: 'Real GDP Growth Rate (%)',
+                        data: [null, 2.9, 2.9, 2.9, 2.9],
+                        fill: false,
+                        borderColor: '#00796B',
+                        tension: 0.1,
+                        pointBackgroundColor: '#00796B',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Avg. Annual Growth: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Growth Rate (%)'
+                            },
+                            suggestedMax: 5
+                        },
+                        x: {
+                             title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section[id]');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
